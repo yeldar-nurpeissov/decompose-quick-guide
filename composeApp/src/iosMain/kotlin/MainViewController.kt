@@ -5,8 +5,8 @@ import com.arkivanov.essenty.lifecycle.ApplicationLifecycle
 import presentation.root.DefaultRootComponent
 
 fun MainViewController() = ComposeUIViewController {
-    val root = remember {
+    val rootComponent = remember {
         DefaultRootComponent(DefaultComponentContext(ApplicationLifecycle()))
     }
-    App(rootComponent = root)
+    App(rootComponent = rootComponent)
 }

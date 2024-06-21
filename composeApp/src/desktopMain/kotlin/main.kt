@@ -10,7 +10,7 @@ import presentation.root.DefaultRootComponent
 fun main() {
     val lifecycle = LifecycleRegistry()
 
-    val root = runOnUiThread {
+    val rootComponent = runOnUiThread {
         DefaultRootComponent(
             componentContext = DefaultComponentContext(lifecycle),
         )
@@ -29,7 +29,7 @@ fun main() {
                 windowInfo = LocalWindowInfo.current,
             )
 
-            App(rootComponent = root)
+            App(rootComponent = rootComponent)
         }
     }
 }

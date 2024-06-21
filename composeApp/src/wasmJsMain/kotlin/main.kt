@@ -11,12 +11,12 @@ import presentation.root.DefaultRootComponent
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     val lifecycle = LifecycleRegistry()
-    val root = DefaultRootComponent(DefaultComponentContext(lifecycle))
+    val rootComponent = DefaultRootComponent(DefaultComponentContext(lifecycle))
 
     lifecycle.attachToDocument()
 
     ComposeViewport(document.body!!) {
-        App(root)
+        App(rootComponent = rootComponent)
     }
 }
 

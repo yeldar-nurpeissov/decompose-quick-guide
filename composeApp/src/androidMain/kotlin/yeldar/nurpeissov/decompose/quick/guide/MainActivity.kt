@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         val rootComponent = DefaultRootComponent(defaultComponentContext())
 
         setContent {
-            App(rootComponent)
+            App(rootComponent = rootComponent)
         }
     }
 }
