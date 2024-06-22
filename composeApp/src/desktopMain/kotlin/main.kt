@@ -5,11 +5,12 @@ import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-
-private val rootComponentFactory = DependencyInjection.rootComponentFactory
+import presentation.root.RootComponent
 
 fun main() {
     val lifecycle = LifecycleRegistry()
+
+    val rootComponentFactory: RootComponent.Factory = DependencyInjection.rootComponentFactory
 
     val rootComponent = runOnUiThread {
         rootComponentFactory(
