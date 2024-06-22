@@ -6,12 +6,14 @@ import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.essenty.lifecycle.stop
 import kotlinx.browser.document
 import org.w3c.dom.Document
-
-private val rootComponentFactory = DependencyInjection.rootComponentFactory
+import presentation.root.RootComponent
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     val lifecycle = LifecycleRegistry()
+
+    val rootComponentFactory: RootComponent.Factory = DependencyInjection.rootComponentFactory
+
     val rootComponent = rootComponentFactory(DefaultComponentContext(lifecycle))
 
     lifecycle.attachToDocument()
