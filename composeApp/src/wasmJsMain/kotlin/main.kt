@@ -5,6 +5,7 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.essenty.lifecycle.stop
 import kotlinx.browser.document
+import org.kodein.di.instance
 import org.w3c.dom.Document
 import presentation.root.RootComponent
 
@@ -12,7 +13,7 @@ import presentation.root.RootComponent
 fun main() {
     val lifecycle = LifecycleRegistry()
 
-    val rootComponentFactory: RootComponent.Factory = DependencyInjection.rootComponentFactory
+    val rootComponentFactory: RootComponent.Factory by kodeinDI.instance()
 
     val rootComponent = rootComponentFactory(DefaultComponentContext(lifecycle))
 
