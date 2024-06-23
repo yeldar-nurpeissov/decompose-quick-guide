@@ -12,9 +12,9 @@ import presentation.root.RootComponent
 fun main() {
     val lifecycle = LifecycleRegistry()
 
-    val rootComponentFactory: RootComponent.Factory = DependencyInjection.rootComponentFactory
+    val rootComponentFactory: RootComponent.Factory by koin.inject()
 
-    val rootComponent = rootComponentFactory(DefaultComponentContext(lifecycle))
+    val rootComponent: RootComponent = rootComponentFactory(DefaultComponentContext(lifecycle))
 
     lifecycle.attachToDocument()
 

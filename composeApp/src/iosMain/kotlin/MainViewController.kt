@@ -6,7 +6,7 @@ import presentation.root.RootComponent
 
 fun MainViewController() = ComposeUIViewController {
     val rootComponent = remember {
-        val rootComponentFactory: RootComponent.Factory = DependencyInjection.rootComponentFactory
+        val rootComponentFactory: RootComponent.Factory by koin.inject()
         rootComponentFactory(DefaultComponentContext(ApplicationLifecycle()))
     }
     App(rootComponent = rootComponent)
