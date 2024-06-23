@@ -6,7 +6,7 @@ import com.arkivanov.decompose.value.Value
 import data.model.Post
 import data.repository.PostRepository
 
-internal class DefaultDetailComponent(
+class DefaultDetailComponent(
     componentContext: ComponentContext,
     postId: String,
     private val repository: PostRepository,
