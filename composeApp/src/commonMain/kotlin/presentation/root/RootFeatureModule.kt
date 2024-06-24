@@ -7,7 +7,7 @@ import presentation.list.listFeatureModule
 val rootFeatureModule = module {
     includes(detailFeatureModule, listFeatureModule)
 
-    single<DefaultRootComponent.Factory> {
+    single<RootComponent.Factory> {
         DefaultRootComponent.Factory(
             detailComponentFactory = get(),
             listComponentFactory = get(),
