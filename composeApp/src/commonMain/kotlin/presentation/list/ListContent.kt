@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,7 +20,12 @@ fun ListContent(
 
     Scaffold(
         modifier = modifier,
-        topBar = { TopAppBar(title = { Text("List") }) }
+        topBar = { TopAppBar(title = { Text("List") }) },
+        floatingActionButton = {
+            FloatingActionButton(component::fabClicked) {
+                Icon(Icons.Outlined.Add, contentDescription = "")
+            }
+        },
     ) { paddingValues ->
         LazyColumn(
             state = rememberLazyListState(),
@@ -27,9 +34,9 @@ fun ListContent(
             items(state) { post ->
                 Row(
                     modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { component.onPostClicked(post) }
-                    .padding(16.dp)
+                        .fillMaxWidth()
+                        .clickable { component.onPostClicked(post) }
+                        .padding(16.dp)
                 ) {
                     Text(post.title)
                 }

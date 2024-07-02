@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
+import presentation.create.CreateComponent
 import presentation.detail.DetailComponent
 import presentation.list.ListComponent
 
@@ -15,6 +16,7 @@ class DefaultRootComponent(
     componentContext: ComponentContext,
     private val listComponentFactory: ListComponent.Factory,
     private val detailComponentFactory: DetailComponent.Factory,
+    private val createComponentFactory: CreateComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
 
     private val nav = StackNavigation<Config>()
@@ -34,7 +36,8 @@ class DefaultRootComponent(
         Config.List -> RootComponent.Child.List(
             listComponentFactory(
                 componentContext = componentContext,
-                postClicked = { postId -> nav.pushNew(Config.Detail(postId)) }
+                postClicked = { postId -> nav.pushNew(Config.Detail(postId)) },
+                createNewPostClicked = { nav.pushNew(Config.Create) }
             )
         )
 
@@ -42,6 +45,13 @@ class DefaultRootComponent(
             detailComponentFactory(
                 componentContext = componentContext,
                 postId = config.postId,
+                onFinished = { nav.pop() },
+            )
+        )
+
+        Config.Create -> RootComponent.Child.Create(
+            createComponentFactory(
+                componentContext = componentContext,
                 onFinished = { nav.pop() },
             )
         )
@@ -55,16 +65,21 @@ class DefaultRootComponent(
 
         @Serializable
         data class Detail(val postId: String) : Config
+
+        @Serializable
+        data object Create : Config
     }
 
     class Factory(
         private val listComponentFactory: ListComponent.Factory,
         private val detailComponentFactory: DetailComponent.Factory,
+        private val createComponentFactory: CreateComponent.Factory,
     ) : RootComponent.Factory {
         override fun invoke(componentContext: ComponentContext): RootComponent {
             return DefaultRootComponent(
                 listComponentFactory = listComponentFactory,
                 detailComponentFactory = detailComponentFactory,
+                createComponentFactory = createComponentFactory,
                 componentContext = componentContext,
             )
         }

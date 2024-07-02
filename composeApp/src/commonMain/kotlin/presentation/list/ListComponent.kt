@@ -8,11 +8,13 @@ interface ListComponent {
     val model: Value<List<Post>>
 
     fun onPostClicked(post: Post)
+    fun fabClicked()
 
     fun interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,
             postClicked: (postId: String) -> Unit,
+            createNewPostClicked: () -> Unit,
         ): ListComponent
     }
 }

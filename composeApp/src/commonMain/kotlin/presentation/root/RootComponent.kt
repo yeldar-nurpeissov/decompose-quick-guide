@@ -3,6 +3,7 @@ package presentation.root
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import presentation.create.CreateComponent
 import presentation.detail.DetailComponent
 import presentation.list.ListComponent
 
@@ -12,6 +13,7 @@ interface RootComponent {
     sealed interface Child {
         class List(val component: ListComponent) : Child
         class Detail(val component: DetailComponent) : Child
+        class Create(val component: CreateComponent) : Child
     }
 
     fun interface Factory {

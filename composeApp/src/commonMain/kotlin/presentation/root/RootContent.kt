@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import presentation.create.CreateContent
 import presentation.detail.DetailContent
 import presentation.list.ListContent
 
@@ -26,6 +27,11 @@ fun RootContent(
             )
 
             is RootComponent.Child.List -> ListContent(
+                component = child.component,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            is RootComponent.Child.Create -> CreateContent(
                 component = child.component,
                 modifier = Modifier.fillMaxSize(),
             )

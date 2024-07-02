@@ -3,6 +3,8 @@ import data.repository.PostRepository
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
+import presentation.create.CreateComponent
+import presentation.create.DefaultCreateComponent
 import presentation.detail.DefaultDetailComponent
 import presentation.detail.DetailComponent
 import presentation.list.DefaultListComponent
@@ -23,10 +25,14 @@ val kodeinDI = DI {
             repository = instance(),
         )
     }
+    bindSingleton<CreateComponent.Factory> {
+        DefaultCreateComponent.Factory()
+    }
     bindSingleton<RootComponent.Factory> {
         DefaultRootComponent.Factory(
             detailComponentFactory = instance(),
             listComponentFactory = instance(),
+            createComponentFactory = instance(),
         )
     }
 }
