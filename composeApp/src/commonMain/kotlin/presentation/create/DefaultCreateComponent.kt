@@ -14,7 +14,15 @@ class DefaultCreateComponent(
     private val onFinished: () -> Unit,
 ) : CreateComponent, ComponentContext by componentContext {
 
-    private val handler = instanceKeeper.getOrCreate(INSTANCE_KEY) { Handler(State()) }
+    private val handler = instanceKeeper.getOrCreate(INSTANCE_KEY) {
+        Handler(
+            initialState = stateKeeper.consume(STATE_KEY, State.serializer()) ?: State()
+        )
+    }
+
+    init {
+        stateKeeper.register(STATE_KEY, State.serializer()) { handler.state.value }
+    }
 
     override val model: Value<CreateComponent.Model> = handler.state.map {
         CreateComponent.Model(
@@ -50,6 +58,7 @@ class DefaultCreateComponent(
 
     companion object {
         private const val INSTANCE_KEY = "instance_key"
+        private const val STATE_KEY = "state_key"
     }
 }
 
