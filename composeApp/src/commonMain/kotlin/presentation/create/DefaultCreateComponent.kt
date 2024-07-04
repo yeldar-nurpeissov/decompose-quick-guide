@@ -5,6 +5,8 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.decompose.value.update
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
+import com.arkivanov.essenty.instancekeeper.getOrCreate
 import kotlinx.serialization.Serializable
 
 class DefaultCreateComponent(
@@ -12,9 +14,9 @@ class DefaultCreateComponent(
     private val onFinished: () -> Unit,
 ) : CreateComponent, ComponentContext by componentContext {
 
-    private val state = MutableValue(State())
+    private val handler = instanceKeeper.getOrCreate(STATE_KEY) { Handler(State()) }
 
-    override val model: Value<CreateComponent.Model> = state.map {
+    override val model: Value<CreateComponent.Model> = handler.state.map {
         CreateComponent.Model(
             title = it.title,
             description = it.description,
@@ -25,15 +27,15 @@ class DefaultCreateComponent(
     override fun onBackPressed() = onFinished()
 
     override fun onNameChanged(value: String) {
-        state.update { it.copy(title = value) }
+        handler.state.update { it.copy(title = value) }
     }
 
     override fun onDescriptionChanged(value: String) {
-        state.update { it.copy(description = value) }
+        handler.state.update { it.copy(description = value) }
     }
 
     override fun onAuthorChanged(value: String) {
-        state.update { it.copy(author = value) }
+        handler.state.update { it.copy(author = value) }
     }
 
     class Factory : CreateComponent.Factory {
@@ -45,6 +47,16 @@ class DefaultCreateComponent(
             onFinished = onFinished,
         )
     }
+
+    companion object {
+        private const val STATE_KEY = "state_key"
+    }
+}
+
+private class Handler(
+    initialState: State
+) : InstanceKeeper.Instance {
+    val state = MutableValue(initialState)
 }
 
 @Serializable
