@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import presentation.create.CreateContent
+import presentation.detail.Detail2Content
 import presentation.detail.DetailContent
 import presentation.list.ListContent
 
@@ -22,6 +23,11 @@ fun RootContent(
     ) {
         when (val child = it.instance) {
             is RootComponent.Child.Detail -> DetailContent(
+                component = child.component,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            is RootComponent.Child.Detail2 -> Detail2Content(
                 component = child.component,
                 modifier = Modifier.fillMaxSize(),
             )

@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import data.model.Post
 
-interface DetailComponent {
+interface Detail2Component {
     val model: Value<Post>
 
     fun onBackPressed()
@@ -14,8 +14,8 @@ interface DetailComponent {
         operator fun invoke(
             componentContext: ComponentContext,
             postId: String,
-            navigateToDetail2: (String) -> Unit,
+            navigateToDetail: (String) -> Unit,
             onFinished: () -> Unit,
-        ): DetailComponent
+        ): Detail2Component
     }
 }

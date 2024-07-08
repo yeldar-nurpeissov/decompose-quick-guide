@@ -6,32 +6,33 @@ import com.arkivanov.decompose.value.Value
 import data.model.Post
 import data.repository.PostRepository
 
-internal class DefaultDetailComponent(
+internal class DefaultDetail2Component(
     componentContext: ComponentContext,
     private val postId: String,
     private val repository: PostRepository,
-    private val navigateToDetail2: (String) -> Unit,
+    private val navigateToDetail: (String) -> Unit,
     private val onFinished: () -> Unit,
-) : DetailComponent, ComponentContext by componentContext {
+) : Detail2Component, ComponentContext by componentContext {
 
     override val model: Value<Post> = MutableValue(repository.getPost(postId))
 
     override fun onBackPressed() = onFinished()
-    override fun onFabClicked() = navigateToDetail2(postId)
+
+    override fun onFabClicked() = navigateToDetail(postId)
 
     class Factory(
         private val repository: PostRepository,
-    ) : DetailComponent.Factory {
+    ) : Detail2Component.Factory {
 
         override fun invoke(
             componentContext: ComponentContext,
             postId: String,
-            navigateToDetail2: (String) -> Unit,
+            navigateToDetail: (String) -> Unit,
             onFinished: () -> Unit,
-        ): DetailComponent = DefaultDetailComponent(
+        ): Detail2Component = DefaultDetail2Component(
             componentContext = componentContext,
             postId = postId,
-            navigateToDetail2 = navigateToDetail2,
+            navigateToDetail = navigateToDetail,
             onFinished = onFinished,
             repository = repository,
         )

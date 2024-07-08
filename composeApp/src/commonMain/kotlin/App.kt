@@ -2,6 +2,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.arkivanov.decompose.DecomposeExperimentFlags
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import presentation.root.RootComponent
 import presentation.root.RootContent
@@ -9,6 +10,8 @@ import presentation.root.RootContent
 @Composable
 @Preview
 fun App(rootComponent: RootComponent) {
+
+    DecomposeExperimentFlags.duplicateConfigurationsEnabled = true
     MaterialTheme {
         RootContent(
             component = rootComponent,
