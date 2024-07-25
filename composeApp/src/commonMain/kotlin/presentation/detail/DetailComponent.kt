@@ -5,7 +5,13 @@ import com.arkivanov.decompose.value.Value
 import data.model.Post
 
 interface DetailComponent {
-    val model: Value<Post>
+    val model: Value<Model>
+
+    sealed interface Model {
+        data object Loading : Model
+        data class Error(val errorText: String) : Model
+        data class Success(val post: Post) : Model
+    }
 
     fun onBackPressed()
 

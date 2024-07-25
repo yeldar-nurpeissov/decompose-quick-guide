@@ -1,24 +1,32 @@
 package presentation.detail
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import data.model.Post
-import data.repository.PostRepository
+import com.arkivanov.decompose.value.operator.map
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import util.asValue
 
 internal class DefaultDetailComponent(
     componentContext: ComponentContext,
     postId: String,
-    private val repository: PostRepository,
+    detailStoreFactory: DetailStoreFactory,
     private val onFinished: () -> Unit,
 ) : DetailComponent, ComponentContext by componentContext {
 
-    override val model: Value<Post> = MutableValue(repository.getPost(postId))
+    private val store = instanceKeeper.getStore { detailStoreFactory.create(postId) }
+
+    override val model: Value<DetailComponent.Model> = store.asValue().map {
+        when (it) {
+            DetailStore.State.Loading -> DetailComponent.Model.Loading
+            is DetailStore.State.Error -> DetailComponent.Model.Error(it.message)
+            is DetailStore.State.Success -> DetailComponent.Model.Success(it.post)
+        }
+    }
 
     override fun onBackPressed() = onFinished()
 
     class Factory(
-        private val repository: PostRepository,
+        private val detailStoreFactory: DetailStoreFactory,
     ) : DetailComponent.Factory {
 
         override fun invoke(
@@ -29,7 +37,7 @@ internal class DefaultDetailComponent(
             componentContext = componentContext,
             postId = postId,
             onFinished = onFinished,
-            repository = repository,
+            detailStoreFactory = detailStoreFactory,
         )
     }
 }

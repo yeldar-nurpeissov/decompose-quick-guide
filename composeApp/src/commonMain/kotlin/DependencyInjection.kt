@@ -10,6 +10,7 @@ import presentation.create.CreateComponent
 import presentation.create.DefaultCreateComponent
 import presentation.detail.DefaultDetailComponent
 import presentation.detail.DetailComponent
+import presentation.detail.DetailStoreFactory
 import presentation.list.DefaultListComponent
 import presentation.list.ListComponent
 import presentation.list.ListStoreFactory
@@ -28,11 +29,11 @@ val kodeinDI = DI {
     // detail
     bindSingleton<DetailComponent.Factory> {
         DefaultDetailComponent.Factory(
-            repository = instance(),
+            detailStoreFactory = instance(),
         )
     }
     bindSingleton {
-        ListStoreFactory(
+        DetailStoreFactory(
             storeFactory = instance(),
             postRepository = instance(),
         )
@@ -42,6 +43,12 @@ val kodeinDI = DI {
     bindSingleton<ListComponent.Factory> {
         DefaultListComponent.Factory(
             listStoreFactory = instance(),
+        )
+    }
+    bindSingleton {
+        ListStoreFactory(
+            storeFactory = instance(),
+            postRepository = instance(),
         )
     }
 
