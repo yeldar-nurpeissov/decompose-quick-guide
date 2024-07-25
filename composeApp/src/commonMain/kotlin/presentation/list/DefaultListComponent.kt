@@ -1,26 +1,29 @@
 package presentation.list
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.operator.map
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import data.model.Post
-import data.repository.PostRepository
+import util.asValue
 
-class DefaultListComponent(
+internal class DefaultListComponent(
     componentContext: ComponentContext,
-    repository: PostRepository,
+    private val listStoreFactory: ListStoreFactory,
     private val postClicked: (postId: String) -> Unit,
-    private val createNewPostClicked:() -> Unit,
+    private val createNewPostClicked: () -> Unit,
 ) : ListComponent, ComponentContext by componentContext {
 
-    override val model: Value<List<Post>> = MutableValue(repository.getAllPosts())
+    private val store = instanceKeeper.getStore { listStoreFactory.create() }
+
+    override val model: Value<List<Post>> = store.asValue().map { it.items }
 
     override fun onPostClicked(post: Post) = postClicked(post.id)
 
     override fun fabClicked() = createNewPostClicked()
 
     class Factory(
-        private val repository: PostRepository
+        private val listStoreFactory: ListStoreFactory
     ) : ListComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
@@ -30,7 +33,7 @@ class DefaultListComponent(
             return DefaultListComponent(
                 componentContext = componentContext,
                 postClicked = postClicked,
-                repository = repository,
+                listStoreFactory = listStoreFactory,
                 createNewPostClicked = createNewPostClicked,
             )
         }
