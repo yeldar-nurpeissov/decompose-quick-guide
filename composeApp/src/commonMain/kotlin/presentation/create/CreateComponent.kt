@@ -8,14 +8,18 @@ interface CreateComponent {
 
     fun onBackPressed()
 
-    fun onNameChanged(value: String)
+    fun onTitleChanged(value: String)
     fun onDescriptionChanged(value: String)
     fun onAuthorChanged(value: String)
+
+    fun onSaveClicked()
 
     data class Model(
         val title: String,
         val description: String,
         val author: String,
+        val canSave: Boolean,
+        val loading: Boolean,
     )
 
     fun interface Factory {

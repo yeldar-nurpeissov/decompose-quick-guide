@@ -1,8 +1,12 @@
 package presentation.create
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -40,6 +44,7 @@ fun CreateContent(
     ) { paddingValues ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
                 .padding(32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -47,7 +52,7 @@ fun CreateContent(
         ) {
             OutlinedTextField(
                 value = state.title,
-                onValueChange = component::onNameChanged,
+                onValueChange = component::onTitleChanged,
                 label = { Text("Title") },
             )
             OutlinedTextField(
@@ -60,6 +65,18 @@ fun CreateContent(
                 onValueChange = component::onAuthorChanged,
                 label = { Text("Author") },
             )
+
+            AnimatedContent(state.loading) { isLoading ->
+                if (isLoading) CircularProgressIndicator()
+                else {
+                    Button(
+                        onClick = component::onSaveClicked,
+                        enabled = state.canSave,
+                    ) {
+                        Text("Save")
+                    }
+                }
+            }
         }
     }
 }

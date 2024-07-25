@@ -1,76 +1,70 @@
 package presentation.create
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
-import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.arkivanov.essenty.instancekeeper.getOrCreate
-import kotlinx.serialization.Serializable
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import com.arkivanov.mvikotlin.extensions.coroutines.labels
+import kotlinx.coroutines.launch
+import util.asValue
 
-class DefaultCreateComponent(
+internal class DefaultCreateComponent(
     componentContext: ComponentContext,
+    private val createStoreFactory: CreateStoreFactory,
     private val onFinished: () -> Unit,
 ) : CreateComponent, ComponentContext by componentContext {
 
-    private val handler = instanceKeeper.getOrCreate(INSTANCE_KEY) {
-        Handler(
-            initialState = stateKeeper.consume(STATE_KEY, State.serializer()) ?: State()
-        )
-    }
+    private val store = instanceKeeper.getStore { createStoreFactory.create() }
 
     init {
-        stateKeeper.register(STATE_KEY, State.serializer()) { handler.state.value }
+        coroutineScope().launch {
+            store.labels.collect { label ->
+                when (label) {
+                    CreateStore.Label.PostCreated -> onFinished()
+                }
+            }
+        }
     }
 
-    override val model: Value<CreateComponent.Model> = handler.state.map {
+    override val model: Value<CreateComponent.Model> = store.asValue().map {
         CreateComponent.Model(
             title = it.title,
             description = it.description,
             author = it.author,
+            canSave = it.canSave,
+            loading = it.loading,
         )
     }
 
     override fun onBackPressed() = onFinished()
 
-    override fun onNameChanged(value: String) {
-        handler.state.update { it.copy(title = value) }
+    override fun onTitleChanged(value: String) {
+        store.accept(CreateStore.Intent.ChangeTitle(value))
     }
 
     override fun onDescriptionChanged(value: String) {
-        handler.state.update { it.copy(description = value) }
+        store.accept(CreateStore.Intent.ChangeDescription(value))
     }
 
     override fun onAuthorChanged(value: String) {
-        handler.state.update { it.copy(author = value) }
+        store.accept(CreateStore.Intent.ChangeAuthor(value))
     }
 
-    class Factory : CreateComponent.Factory {
+    override fun onSaveClicked() {
+        store.accept(CreateStore.Intent.Save)
+    }
+
+    class Factory(
+        private val createStoreFactory: CreateStoreFactory,
+    ) : CreateComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
             onFinished: () -> Unit,
         ): CreateComponent = DefaultCreateComponent(
             componentContext = componentContext,
+            createStoreFactory = createStoreFactory,
             onFinished = onFinished,
         )
     }
-
-    companion object {
-        private const val INSTANCE_KEY = "instance_key"
-        private const val STATE_KEY = "state_key"
-    }
 }
-
-private class Handler(
-    initialState: State
-) : InstanceKeeper.Instance {
-    val state = MutableValue(initialState)
-}
-
-@Serializable
-private data class State(
-    val title: String = "",
-    val description: String = "",
-    val author: String = "",
-)

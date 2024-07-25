@@ -7,6 +7,7 @@ import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 import presentation.create.CreateComponent
+import presentation.create.CreateStoreFactory
 import presentation.create.DefaultCreateComponent
 import presentation.detail.DefaultDetailComponent
 import presentation.detail.DetailComponent
@@ -54,7 +55,15 @@ val kodeinDI = DI {
 
     // create
     bindSingleton<CreateComponent.Factory> {
-        DefaultCreateComponent.Factory()
+        DefaultCreateComponent.Factory(
+            createStoreFactory = instance(),
+        )
+    }
+    bindSingleton {
+        CreateStoreFactory(
+            storeFactory = instance(),
+            postRepository = instance(),
+        )
     }
 
     // root
