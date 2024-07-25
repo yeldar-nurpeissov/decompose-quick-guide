@@ -68,8 +68,14 @@ kotlin {
 
             implementation(libs.decompose)
             implementation(libs.decompose.extensions.compose)
+            implementation(libs.essenty.lifecycle.coroutines)
 
             implementation(libs.kodein.di)
+
+            implementation(libs.mvikotlin)
+            implementation(libs.mvikotlin.extensions.coroutines)
+            implementation(libs.mvikotlin.logging)
+            implementation(libs.mvikotlin.timetravel)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
