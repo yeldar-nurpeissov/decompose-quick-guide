@@ -1,11 +1,12 @@
 package presentation.list
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
 import data.model.Post
+import kotlinx.coroutines.flow.StateFlow
+import presentation.list.model.ListState
 
 interface ListComponent {
-    val model: Value<List<Post>>
+    val state: StateFlow<ListState>
 
     fun onPostClicked(post: Post)
     fun fabClicked()

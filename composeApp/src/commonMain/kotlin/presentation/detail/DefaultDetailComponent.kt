@@ -1,32 +1,25 @@
 package presentation.detail
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.operator.map
-import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import util.asValue
+import com.arkivanov.essenty.instancekeeper.getOrCreate
+import kotlinx.coroutines.flow.StateFlow
+import presentation.detail.model.DetailState
 
 internal class DefaultDetailComponent(
     componentContext: ComponentContext,
     postId: String,
-    detailStoreFactory: DetailStoreFactory,
+    detailViewModelFactory: DetailViewModel.Factory,
     private val onFinished: () -> Unit,
 ) : DetailComponent, ComponentContext by componentContext {
 
-    private val store = instanceKeeper.getStore { detailStoreFactory.create(postId) }
+    private val viewModel = instanceKeeper.getOrCreate { detailViewModelFactory(postId) }
 
-    override val model: Value<DetailComponent.Model> = store.asValue().map {
-        when (it) {
-            DetailStore.State.Loading -> DetailComponent.Model.Loading
-            is DetailStore.State.Error -> DetailComponent.Model.Error(it.message)
-            is DetailStore.State.Success -> DetailComponent.Model.Success(it.post)
-        }
-    }
+    override val state: StateFlow<DetailState> = viewModel.state
 
     override fun onBackPressed() = onFinished()
 
     class Factory(
-        private val detailStoreFactory: DetailStoreFactory,
+        private val detailViewModelFactory: DetailViewModel.Factory,
     ) : DetailComponent.Factory {
 
         override fun invoke(
@@ -37,7 +30,7 @@ internal class DefaultDetailComponent(
             componentContext = componentContext,
             postId = postId,
             onFinished = onFinished,
-            detailStoreFactory = detailStoreFactory,
+            detailViewModelFactory = detailViewModelFactory,
         )
     }
 }

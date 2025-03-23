@@ -16,7 +16,7 @@ essenty = "2.1.0"
 junit = "4.13.2"
 kotlin = "2.0.0"
 kodein-di = "7.22.0"
-mvi = "4.1.0"
+molecule = "2.0.0"
 
 [libraries]
 kodein-di = { module = "org.kodein.di:kodein-di", version.ref = "kodein-di" }
@@ -33,11 +33,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extensions-compose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
 essenty-lifecycle-coroutines = { module = "com.arkivanov.essenty:lifecycle-coroutines", version.ref = "essenty" }
-mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvi" }
-mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvi" }
-mvikotlin-logging = { module = "com.arkivanov.mvikotlin:mvikotlin-logging", version.ref = "mvi" }
-mvikotlin-timetravel = { module = "com.arkivanov.mvikotlin:mvikotlin-timetravel", version.ref = "mvi" }
-mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvi" }
+molecule = { module = "app.cash.molecule:molecule-runtime", version.ref = "molecule" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

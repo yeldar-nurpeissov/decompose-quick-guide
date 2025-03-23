@@ -1,17 +1,11 @@
 package presentation.detail
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
-import data.model.Post
+import kotlinx.coroutines.flow.StateFlow
+import presentation.detail.model.DetailState
 
 interface DetailComponent {
-    val model: Value<Model>
-
-    sealed interface Model {
-        data object Loading : Model
-        data class Error(val errorText: String) : Model
-        data class Success(val post: Post) : Model
-    }
+    val state: StateFlow<DetailState>
 
     fun onBackPressed()
 

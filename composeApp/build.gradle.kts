@@ -72,10 +72,7 @@ kotlin {
 
             implementation(libs.kodein.di)
 
-            implementation(libs.mvikotlin)
-            implementation(libs.mvikotlin.extensions.coroutines)
-            implementation(libs.mvikotlin.logging)
-            implementation(libs.mvikotlin.timetravel)
+            implementation(libs.molecule)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

@@ -16,7 +16,7 @@ fun ListContent(
     component: ListComponent,
     modifier: Modifier = Modifier,
 ) {
-    val state by component.model.subscribeAsState()
+    val state by component.state.collectAsState()
 
     Scaffold(
         modifier = modifier,
@@ -31,7 +31,7 @@ fun ListContent(
             state = rememberLazyListState(),
             modifier = Modifier.padding(paddingValues)
         ) {
-            items(state) { post ->
+            items(state.items) { post ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -1,69 +1,60 @@
 package presentation.create
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.operator.map
+import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
-import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.extensions.coroutines.labels
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
-import util.asValue
+import presentation.create.model.CreateIntent
+import presentation.create.model.CreateLabel
 
 internal class DefaultCreateComponent(
     componentContext: ComponentContext,
-    private val createStoreFactory: CreateStoreFactory,
+    private val createViewModelFactory: CreateViewModel.Factory,
     private val onFinished: () -> Unit,
 ) : CreateComponent, ComponentContext by componentContext {
 
-    private val store = instanceKeeper.getStore { createStoreFactory.create() }
+    private val viewModel = instanceKeeper.getOrCreate { createViewModelFactory() }
 
     init {
         coroutineScope().launch {
-            store.labels.collect { label ->
+            viewModel.labels.consumeEach { label ->
                 when (label) {
-                    CreateStore.Label.PostCreated -> onFinished()
+                    CreateLabel.PostCreated -> onFinished()
                 }
             }
         }
     }
 
-    override val model: Value<CreateComponent.Model> = store.asValue().map {
-        CreateComponent.Model(
-            title = it.title,
-            description = it.description,
-            author = it.author,
-            canSave = it.canSave,
-            loading = it.loading,
-        )
-    }
+    override val state = viewModel.state
 
     override fun onBackPressed() = onFinished()
 
     override fun onTitleChanged(value: String) {
-        store.accept(CreateStore.Intent.ChangeTitle(value))
+        viewModel.accept(CreateIntent.ChangeTitle(value))
     }
 
     override fun onDescriptionChanged(value: String) {
-        store.accept(CreateStore.Intent.ChangeDescription(value))
+        viewModel.accept(CreateIntent.ChangeDescription(value))
     }
 
     override fun onAuthorChanged(value: String) {
-        store.accept(CreateStore.Intent.ChangeAuthor(value))
+        viewModel.accept(CreateIntent.ChangeAuthor(value))
     }
 
     override fun onSaveClicked() {
-        store.accept(CreateStore.Intent.Save)
+        viewModel.accept(CreateIntent.Save)
     }
 
     class Factory(
-        private val createStoreFactory: CreateStoreFactory,
+        private val createViewModelFactory: CreateViewModel.Factory,
     ) : CreateComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
             onFinished: () -> Unit,
         ): CreateComponent = DefaultCreateComponent(
             componentContext = componentContext,
-            createStoreFactory = createStoreFactory,
+            createViewModelFactory = createViewModelFactory,
             onFinished = onFinished,
         )
     }

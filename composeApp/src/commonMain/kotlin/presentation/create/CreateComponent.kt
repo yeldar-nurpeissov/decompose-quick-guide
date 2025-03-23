@@ -1,10 +1,11 @@
 package presentation.create
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
+import kotlinx.coroutines.flow.StateFlow
+import presentation.create.model.CreateState
 
 interface CreateComponent {
-    val model: Value<Model>
+    val state: StateFlow<CreateState>
 
     fun onBackPressed()
 
@@ -13,14 +14,6 @@ interface CreateComponent {
     fun onAuthorChanged(value: String)
 
     fun onSaveClicked()
-
-    data class Model(
-        val title: String,
-        val description: String,
-        val author: String,
-        val canSave: Boolean,
-        val loading: Boolean,
-    )
 
     fun interface Factory {
         operator fun invoke(

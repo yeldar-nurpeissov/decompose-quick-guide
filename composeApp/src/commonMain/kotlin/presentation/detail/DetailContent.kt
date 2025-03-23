@@ -15,18 +15,20 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import presentation.detail.model.DetailState
 
 @Composable
 fun DetailContent(
     component: DetailComponent,
     modifier: Modifier = Modifier,
 ) {
-    val state by component.model.subscribeAsState()
+    val state by component.state.collectAsState()
 
     Scaffold(
         modifier = modifier,
@@ -50,9 +52,9 @@ fun DetailContent(
         ) {
             AnimatedContent(state) { contentState ->
                 when (contentState) {
-                    DetailComponent.Model.Loading -> CircularProgressIndicator()
-                    is DetailComponent.Model.Error -> Text(contentState.errorText)
-                    is DetailComponent.Model.Success -> Column(
+                    DetailState.Loading -> CircularProgressIndicator()
+                    is DetailState.Error -> Text(contentState.message)
+                    is DetailState.Success -> Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
